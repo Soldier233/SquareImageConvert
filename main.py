@@ -22,7 +22,7 @@ def convert(path):
         # 符合原尺寸
         return before
     # 需要拉伸
-    resized_image = before.resize((size,size),Image.ANTIALIAS)
+    resized_image = before.resize((size,size),Image.NEAREST)
     return resized_image
     
 
