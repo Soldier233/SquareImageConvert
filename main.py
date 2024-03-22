@@ -5,17 +5,26 @@ from PIL import Image
 
 def get_next_square_size(pixel):
     for i in range(1, 11):
-        if 2 ** i > pixel:
+        if 2 ** i >= pixel:
             return 2 ** i
 
 
 def convert(path):
     before = Image.open(path)
     size = get_next_square_size(max(before.size))
-    new_image = Image.new("RGBA", (size, size))
-    center = size / 2.0
-    new_image.paste(before, (int(center - before.size[0] / 2.0), int(center - before.size[1] / 2.0)))
-    return new_image
+    if before.size[0] != before.size[1]:
+        # 不是方形的图片，需要转换
+        new_image = Image.new("RGBA", (size, size))
+        center = size / 2.0
+        new_image.paste(before, (int(center - before.size[0] / 2.0), int(center - before.size[1] / 2.0)))
+        return new_image
+    if before.size == size:
+        # 符合原尺寸
+        return before
+    # 需要拉伸
+    resized_image = before.resize((size,size),Image.ANTIALIAS)
+    return resized_image
+    
 
 
 def main():
